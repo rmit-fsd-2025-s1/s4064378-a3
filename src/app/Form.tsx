@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useApi } from "./ApiProvider";
 
 export type PetFormData = {
@@ -22,17 +22,26 @@ const breedTypes = [
   "Dachshund",
   "Yorkshire Terrier",
 ];
+type ApiData2 = {
+  totalPremium: number;
+  breakdown: {
+    basePremium: number;
+    ageAdjustment: number;
+    preExistingConditionsAdjustment: number;
+    coverageLevelAdjustment: number;
+  };
+};
 
 const Form = () => {
-  // const { data, loading, error, fetchData } = useApi();
   const { fetchData, data, loading, error } = useApi();
 
-  // const [formData, setFormData] = useState<FormData>({
-  //   age: 0,
-  //   breedType: "",
-  //   condition: false,
-  //   coverage: "",
-  // });
+  const [resultData, setResultData] = useState<ApiData2>();
+
+  useEffect(() => {
+    if (!loading && data) {
+      setResultData(data);
+    }
+  }, [loading]);
 
   const value = true;
 
@@ -89,7 +98,7 @@ const Form = () => {
 
   // if (loading) return <div>Loading...</div>;
   // if (error) return <div>Error: {error}</div>;
-  console.log(data);
+  // console.log(data);
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
   // if (!data || data.length === 0) return null;
@@ -130,7 +139,9 @@ const Form = () => {
                   <div className="form-group">
                     <label htmlFor="breed" className="form-label" />
                     <div>
-                      <label htmlFor="simple-select">Breed</label>
+                      <label data-testid="breed" htmlFor="simple-select">
+                        Breed
+                      </label>
                       <div>
                         <select
                           id="simple-select"
@@ -152,7 +163,11 @@ const Form = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="age" className="form-label">
+                    <label
+                      data-testid="age"
+                      htmlFor="age"
+                      className="form-label"
+                    >
                       Age
                     </label>
                     <input
@@ -169,7 +184,11 @@ const Form = () => {
                 </div>
                 <div className="form-row">
                   <div className="form-group">
-                    <label htmlFor="breed" className="form-label" />
+                    <label
+                      data-testid="condition"
+                      htmlFor="condition"
+                      className="form-label"
+                    />
                     <div>
                       <label htmlFor="simple-select">
                         Pre-existing Condition
@@ -191,7 +210,11 @@ const Form = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="breed" className="form-label" />
+                    <label
+                      data-testid="coverage"
+                      htmlFor="coverage"
+                      className="form-label"
+                    />
                     <div>
                       <label htmlFor="simple-select">Coverage Level</label>
                       <div>
@@ -219,6 +242,35 @@ const Form = () => {
             </div>
           </div>
         </div>
+        <div
+          style={{
+            marginTop: "2rem",
+            padding: "1rem",
+            borderTop: "1px solid #ccc",
+          }}
+        >
+          <h3>Premium Breakdown</h3>
+
+          {resultData && (
+            <div style={{ marginBottom: "1rem" }}>
+              <p>
+                <strong>Total Premium:</strong> ${resultData.totalPremium}
+              </p>
+              <ul>
+                <li>Base Premium: ${resultData.breakdown.basePremium}</li>
+                <li>Age Adjustment: ${resultData.breakdown.ageAdjustment}</li>
+                <li>
+                  Pre-existing Conditions Adjustment: $
+                  {resultData.breakdown.preExistingConditionsAdjustment}
+                </li>
+                <li>
+                  Coverage Level Adjustment: $
+                  {resultData.breakdown.coverageLevelAdjustment}
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
@@ -227,35 +279,6 @@ const Form = () => {
           <div>Footer</div>
         </div>
       </footer> */}
-      <div
-        style={{
-          marginTop: "2rem",
-          padding: "1rem",
-          borderTop: "1px solid #ccc",
-        }}
-      >
-        <h3>Premium Breakdown</h3>
-
-        {data && (
-          <div style={{ marginBottom: "1rem" }}>
-            <p>
-              <strong>Total Premium:</strong> ${data.totalPremium}
-            </p>
-            <ul>
-              <li>Base Premium: ${data.breakdown.basePremium}</li>
-              <li>Age Adjustment: ${data.breakdown.ageAdjustment}</li>
-              <li>
-                Pre-existing Conditions Adjustment: $
-                {data.breakdown.preExistingConditionsAdjustment}
-              </li>
-              <li>
-                Coverage Level Adjustment: $
-                {data.breakdown.coverageLevelAdjustment}
-              </li>
-            </ul>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

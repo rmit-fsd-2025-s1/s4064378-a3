@@ -10,7 +10,7 @@ import {
 import { petApi } from "./services/petApi";
 import { PetFormData } from "./Form";
 
-type ApiData = {
+type ApiData2 = {
   totalPremium: number;
   breakdown: {
     basePremium: number;
@@ -22,7 +22,7 @@ type ApiData = {
 };
 
 type ApiContextType = {
-  data: ApiData;
+  data: ApiData2;
   loading: boolean;
   error: string | null;
   fetchData: (formData: PetFormData) => Promise<void>;
@@ -31,7 +31,7 @@ type ApiContextType = {
 const ApiContext = createContext<ApiContextType | undefined>(undefined);
 
 export const ContextProvider = ({ children }: { children: ReactNode }) => {
-  const [data, setData] = useState<ApiData>();
+  const [data, setData] = useState<ApiData2>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,7 +40,7 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
       const response = await petApi.calculatePremium(formData);
-      setData(response.data);
+      setData(response);
     } catch (err) {
       setError("Failed to fetch data");
       console.error(err);

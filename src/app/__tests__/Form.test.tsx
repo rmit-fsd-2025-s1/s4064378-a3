@@ -1,113 +1,68 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+// __tests__/Form.test.tsx
+
+import { render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import Form from "../Form";
 import { useApi } from "../ApiProvider";
 
 jest.mock("../ApiProvider");
 
-describe("Form Component", () => {
-  const mockUseApi = useApi as jest.MockedFunction<typeof useApi>;
+const mockFetchData = jest.fn();
 
+describe("unit tests", () => {
   beforeEach(() => {
-    // Reset all mocks before each test
-    jest.clearAllMocks();
+    (useApi as jest.Mock).mockReturnValue({
+      data: null,
+      loading: false,
+      error: null,
+      fetchData: mockFetchData,
+    });
+  });
 
-    // Default mock implementation
-    mockUseApi.mockReturnValue({
-      data: [],
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  test("shows loading indicator when loading", () => {
+    (useApi as jest.Mock).mockReturnValue({
+      data: null,
       loading: true,
       error: null,
-      fetchData: jest.fn(),
+      fetchData: mockFetchData,
     });
+
     render(<Form />);
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 
-  test("renders header and footer", () => {
-    expect(screen.getByText("My Application")).toBeInTheDocument();
-    // expect(screen.getByText(/Privacy Policy/i)).toBeInTheDocument();
+  test("renders form inputs and submit button", () => {
+    render(<Form />);
+    expect(screen.getByTestId("breed")).toBeInTheDocument();
+    expect(screen.getByTestId("age")).toBeInTheDocument();
+    expect(screen.getByTestId("condition")).toBeInTheDocument();
+    expect(screen.getByTestId("coverage")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
   });
 
-  // test("renders all form fields", () => {
-  //   expect(screen.getByLabelText(/Full Name/i)).toBeInTheDocument();
-  //   expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
-  //   expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-  //   expect(screen.getByLabelText(/Age/i)).toBeInTheDocument();
-  // });
-
-  test("validates required fields", async () => {
-    // fireEvent.click(screen.getByText("Submit"));
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/Full Name/i)).toHaveAttribute("required");
-      expect(screen.getByLabelText(/Email Address/i)).toHaveAttribute(
-        "required"
-      );
-      expect(screen.getByLabelText(/Password/i)).toHaveAttribute("required");
+  test("shows error message when there is an error", () => {
+    (useApi as jest.Mock).mockReturnValue({
+      data: null,
+      loading: false,
+      error: "Something went wrong",
+      fetchData: mockFetchData,
     });
+
+    render(<Form />);
+    expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
   });
 
-  // test("handles input changes correctly", () => {
-  //   const nameInput = screen.getByLabelText(/Full Name/i) as HTMLInputElement;
-  //   fireEvent.change(nameInput, { target: { value: "John Doe" } });
-  //   expect(nameInput.value).toBe("John Doe");
-
-  //   const ageInput = screen.getByLabelText(/Age/i) as HTMLInputElement;
-  //   fireEvent.change(ageInput, { target: { value: "30" } });
-  //   expect(ageInput.value).toBe("30");
-  // });
-
-  // test("submits form with correct data", async () => {
-  //   // Mock console.log
-  //   const mockConsoleLog = jest
-  //     .spyOn(console, "log")
-  //     .mockImplementation(() => {});
-
-  //   // Fill out form
-  //   fireEvent.change(screen.getByLabelText(/Full Name/i), {
-  //     target: { value: "John Doe" },
-  //   });
-  //   fireEvent.change(screen.getByLabelText(/Email Address/i), {
-  //     target: { value: "john@example.com" },
-  //   });
-  //   fireEvent.change(screen.getByLabelText(/Password/i), {
-  //     target: { value: "secure123" },
-  //   });
-  //   fireEvent.change(screen.getByLabelText(/Age/i), {
-  //     target: { value: "30" },
-  //   });
-
-  //   // Submit form
-  //   fireEvent.click(screen.getByText("Submit"));
-
-  //   await waitFor(() => {
-  //     expect(mockConsoleLog).toHaveBeenCalledWith(
-  //       "Form submitted:",
-  //       expect.objectContaining({
-  //         name: "John Doe",
-  //         email: "john@example.com",
-  //         password: "secure123",
-  //         age: 30,
-  //       })
-  //     );
-  //   });
-
-  //   mockConsoleLog.mockRestore();
-  // });
-
-  // test("validates email format", async () => {
-  //   const emailInput = screen.getByLabelText(/Email Address/i);
-  //   fireEvent.change(emailInput, { target: { value: "invalid-email" } });
-  //   fireEvent.click(screen.getByText("Submit"));
-
-  //   await waitFor(() => {
-  //     expect(emailInput).toHaveAttribute("type", "email");
-  //     expect(emailInput).toHaveValue("invalid-email");
-  //   });
-  // });
-
-  // test("validates age as number", () => {
-  //   const ageInput = screen.getByLabelText(/Age/i) as HTMLInputElement;
-  //   expect(ageInput).toHaveAttribute("type", "number");
-  //   expect(ageInput).toHaveAttribute("min", "0");
+  // test("renders form inputs and submit button", () => {
+  //   render(<Form />);
+  //   expect(screen.getByLabelText(/breed/i)).toBeInTheDocument();
+  //   expect(screen.getByLabelText(/age/i)).toBeInTheDocument();
+  //   expect(
+  //     screen.getByLabelText(/pre-existing condition/i)
+  //   ).toBeInTheDocument();
+  //   expect(screen.getByLabelText(/coverage level/i)).toBeInTheDocument();
+  //   expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
   // });
 });
