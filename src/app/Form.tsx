@@ -108,7 +108,7 @@ const Form = () => {
       {/* Header */}
       <header className="site-header">
         <div className="header-content">
-          <h1>My Application</h1>
+          <h1>Pet Application</h1>
           <nav>
             <ul className="nav-links">
               <li>
