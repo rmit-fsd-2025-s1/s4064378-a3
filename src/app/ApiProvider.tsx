@@ -22,7 +22,7 @@ type ApiData2 = {
 };
 
 type ApiContextType = {
-  data: ApiData2;
+  data?: ApiData2;
   loading: boolean;
   error: string | null;
   fetchData: (formData: PetFormData) => Promise<void>;
@@ -48,11 +48,6 @@ export const ContextProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-
-  // Fetch data on component mount
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   return (
     <ApiContext.Provider value={{ data, loading, error, fetchData }}>

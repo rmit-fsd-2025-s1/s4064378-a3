@@ -55,14 +55,13 @@ describe("unit tests", () => {
     expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
   });
 
-  // test("renders form inputs and submit button", () => {
-  //   render(<Form />);
-  //   expect(screen.getByLabelText(/breed/i)).toBeInTheDocument();
-  //   expect(screen.getByLabelText(/age/i)).toBeInTheDocument();
-  //   expect(
-  //     screen.getByLabelText(/pre-existing condition/i)
-  //   ).toBeInTheDocument();
-  //   expect(screen.getByLabelText(/coverage level/i)).toBeInTheDocument();
-  //   expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
-  // });
+  test("renders form inputs and submit button", () => {
+    render(<Form />);
+    expect(screen.getByLabelText(/breed/i)).toBeInTheDocument();
+    expect(
+      screen.getByLabelText(/pre-existing condition/i)
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/coverage level/i)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
+  });
 });

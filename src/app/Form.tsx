@@ -149,6 +149,7 @@ const Form = () => {
                           onChange={(e) => handleSelectChange(e, "breed")}
                           className="form-input"
                           required
+                          aria-label="breed"
                         >
                           <option value="">-- Select --</option>
 
@@ -179,6 +180,7 @@ const Form = () => {
                       value={age}
                       onChange={handleChange}
                       className="form-input"
+                      aria-label="age"
                     />
                   </div>
                 </div>
@@ -200,6 +202,7 @@ const Form = () => {
                           onChange={(e) => handleSelectChange(e, "condition")}
                           className="form-input"
                           required
+                          aria-label="condition"
                         >
                           <option value="">-- Select --</option>
                           <option value={"true"}>{"True"}</option>
@@ -224,6 +227,7 @@ const Form = () => {
                           onChange={(e) => handleSelectChange(e, "coverage")}
                           className="form-input"
                           required
+                          aria-label="coverage"
                         >
                           <option value="">-- Select --</option>
                           <option value={"basic"}>{"Basic"}</option>
